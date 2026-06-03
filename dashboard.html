@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KIIS Bank - Admin & Manager Dashboard</title>
+  <meta name="description"
+    content="State-of-the-art fintech portal for central ledger audits, employee management, and live network routing.">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    // Strict pre-rendering authorization gate
+    (function() {
+      const session = localStorage.getItem('kiis_portal_session');
+      const token = localStorage.getItem('kiis_portal_token');
+      if (!session || !token) {
+        window.location.href = window.location.protocol === 'file:' ? 'index.html' : '/';
+      }
+    })();
+  </script>
+</head>
+
+<body>
+
+  <!-- Wireframe Backdrop Overlay -->
+  <div class="cyber-grid"></div>
+
+  <div class="dashboard-wrapper">
+
+    <!-- HIGH-TECH SYSTEM HUD HEADER -->
+    <header class="hud-header">
+      <div class="header-brand">
+        <h1 class="logo-metallic">KIIS Bank</h1>
+        <span class="header-badge" id="systemModeBadge">ADMIN SECURE-CORE</span>
+      </div>
+
+      <!-- Live Telemetry Group -->
+      <div class="hud-stats-group">
+        <div class="hud-stat-item">
+          <div class="hud-stat-label">System Integrity</div>
+          <div class="hud-stat-value success">99.98% SECURE</div>
+        </div>
+        <div class="hud-stat-item">
+          <div class="hud-stat-label">Central Ledger Load</div>
+          <div class="hud-stat-value" id="hudLedgerLoad">14.2 GigaFLOPs</div>
+        </div>
+        <div class="hud-stat-item">
+          <div class="hud-stat-label">Active Nodes</div>
+          <div class="hud-stat-value success" id="hudActiveNodes">5 / 5 ONLINE</div>
+        </div>
+        <div class="hud-stat-item">
+          <div class="hud-stat-label">Threat Level</div>
+          <div class="hud-stat-value" id="hudThreatLevel"
+            style="color: #00ff87; text-shadow: 0 0 5px rgba(0, 230, 118, 0.3);">MINIMAL</div>
+        </div>
+      </div>
+
+      <!-- Logged-in User Profile Mock -->
+      <div class="hud-user-profile">
+        <div class="profile-info">
+          <div class="profile-name" id="userNameProfile">Alex Mercer</div>
+          <div class="profile-role" id="userRoleProfile">Super Admin</div>
+        </div>
+        <div class="profile-avatar" id="avatarInitials">AM</div>
+      </div>
+    </header>
+
+    <!-- CONTENT GRID LAYOUT -->
+    <main class="dashboard-grid">
+
+      <!-- Side icon sidebar control mockup -->
+      <nav class="dashboard-sidebar">
+        <!-- Dashboard Home Icon -->
+        <button class="sidebar-icon active" title="System Dashboard" onclick="selectSidebar(this)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="9" />
+            <rect x="14" y="3" width="7" height="5" />
+            <rect x="14" y="12" width="7" height="9" />
+            <rect x="3" y="16" width="7" height="5" />
+          </svg>
+        </button>
+        <!-- Security Core Icon -->
+        <button class="sidebar-icon" title="Network Nodes Map" onclick="selectSidebar(this)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+          </svg>
+        </button>
+        <!-- Ledger Log Icon -->
+        <button class="sidebar-icon" title="Audit Logs Terminal" onclick="selectSidebar(this)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="4 17 10 11 14 15 20 9" />
+            <polyline points="14 9 20 9 20 15" />
+          </svg>
+        </button>
+        <!-- Users Control Icon -->
+        <button class="sidebar-icon" title="Employee Control" onclick="selectSidebar(this)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          </svg>
+        </button>
+        <!-- Settings Icon -->
+        <button class="sidebar-icon" title="Vault Settings" onclick="selectSidebar(this)" style="margin-top: auto;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+        </button>
+      </nav>
+
+      <!-- ADMIN DESKTOP -->
+      <div id="desktopAdmin" class="role-desktop show-desktop">
+        <section class="dashboard-main-content">
+          <!-- 3D NETWORK NODE MAP PANEL -->
+          <article class="dash-card node-map-card">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">
+                <span class="indicator active"></span>
+                3D Transaction Routing Network
+              </h2>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn-table-action" onclick="resetNodeMap()">ALIGN VECTOR</button>
+                <button class="btn-table-action" onclick="simulateAttack()"
+                  style="border-color: rgba(255, 60, 60, 0.4); color: #ff5050;">INJECT ALERT</button>
+              </div>
+            </div>
+            <div class="node-map-container" id="nodeMapBox">
+              <!-- HUD digital tracking parameters inside canvas -->
+              <div class="canvas-overlay-hud">
+                <div>PROTOCOL: <span style="color: var(--glow-emerald);">KIIS-NET v4.2</span></div>
+                <div>COORD MATRICES: <span id="overlayCoords">DYN_ROTATING</span></div>
+                <div>STATION ALPHA: <span style="color: var(--glow-emerald);">ONLINE</span></div>
+                <div>STATION OMEGA: <span style="color: var(--glow-emerald);">ONLINE</span></div>
+                <div>DESYNC RATE: <span id="overlayDesync">0.012 ms</span></div>
+              </div>
+              <!-- Canvas Object -->
+              <canvas class="node-canvas" id="nodeCanvas"></canvas>
+            </div>
+          </article>
+
+          <!-- HOLOGRAPHIC LEDGER FLOW / FINANCIAL ANALYTICS -->
+          <article class="dash-card analytics-card">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">
+                <span class="indicator"></span>
+                Holographic Ledger Analytics
+              </h2>
+              <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--glow-cyan);">LIVE VOLATILITY MAPPING</span>
+            </div>
+            <div class="chart-container" id="chartContainerBox">
+              <!-- Custom Canvas Chart -->
+              <canvas class="holo-chart-canvas" id="holoChartCanvas"></canvas>
+            </div>
+          </article>
+        </section>
+
+        <section class="dashboard-control-panel">
+          <!-- EMPLOYEE MANAGEMENT & PERMISSION SLATE -->
+          <article class="dash-card employee-card" style="flex: 1.1; min-height: 250px;">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">
+                <span class="indicator active"></span>
+                Clearinghouse Staff & Access Levels
+              </h2>
+            </div>
+
+            <div class="glass-table-wrapper">
+              <table class="glass-table">
+                <thead>
+                  <tr>
+                    <th>Identity</th>
+                    <th>Gateway Tier</th>
+                    <th>Network State</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="adminStaffTableBody">
+                  <!-- Dynamically populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- REGISTER ACCESS NODE FORM -->
+          <article class="dash-card employee-card" style="flex: 1; min-height: auto; padding-bottom: 1rem;">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">
+                <span class="indicator"></span>
+                Register High-Security Access Node
+              </h2>
+            </div>
+            <form class="cyber-form" onsubmit="registerNewUser(event)">
+              <div class="form-group">
+                <label class="form-label">IDENTITY FULL NAME</label>
+                <input type="text" id="regName" class="form-input" placeholder="e.g. Viktor Haas" required>
+              </div>
+              <div class="cyber-form-row" style="margin-top: 0.5rem;">
+                <div class="form-group">
+                  <label class="form-label">CLEARANCE TIER</label>
+                  <select id="regRole" class="form-input" onchange="toggleRegBalanceField(this.value)">
+                    <option value="Employee">Employee</option>
+                    <option value="Manager">Manager</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Customer">Customer</option>
+                  </select>
+                </div>
+                <div class="form-group" id="regBalanceGroup" style="display: none;">
+                  <label class="form-label">INITIAL VAULT BALANCE ($)</label>
+                  <input type="number" id="regBalance" class="form-input" placeholder="e.g. 1000000" value="0">
+                </div>
+              </div>
+              <div class="cyber-form-row" style="margin-top: 0.5rem;">
+                <div class="form-group">
+                  <label class="form-label">GATEWAY PASSWORD</label>
+                  <input type="text" id="regPwd" class="form-input" placeholder="e.g. secret123" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">2FA PASSCODE (6-DIGITS)</label>
+                  <input type="text" id="regOtp" class="form-input" placeholder="e.g. 123456" maxlength="6" required>
+                </div>
+              </div>
+              <button type="submit" class="bio-btn" style="margin-top: 0.8rem;">REGISTER SECURITY CREDENTIALS</button>
+            </form>
+          </article>
+
+          <!-- CYBER SECURITY TERMINAL LOG -->
+          <article class="dash-card audit-card">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title" style="color: #ff5050;">
+                <span class="indicator" style="background-color: #ff5050; box-shadow: 0 0 8px #ff5050;"></span>
+                Vault Core Security Logs
+              </h2>
+              <button class="btn-table-action" onclick="clearLogs()" style="font-size: 0.65rem;">PURGE</button>
+            </div>
+            <div class="terminal-body" id="terminalLogs">
+              <!-- Dynamically populated via JS -->
+            </div>
+          </article>
+        </section>
+      </div>
+
+      <!-- MANAGER DESKTOP -->
+      <div id="desktopManager" class="role-desktop">
+        <section class="dashboard-main-content">
+          <!-- HIGH-VALUE TRANSACTION OVERRIDES -->
+          <article class="dash-card node-map-card">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">
+                <span class="indicator active"></span>
+                High-Value Ledger Overrides
+              </h2>
+              <span class="header-badge">TETHER LEVEL 3 clearance</span>
+            </div>
+            <div class="glass-table-wrapper">
+              <table class="glass-table">
+                <thead>
+                  <tr>
+                    <th>Ledger Wire</th>
+                    <th>Vector Routing</th>
+                    <th>Asset Amount</th>
+                    <th>Signature Override</th>
+                  </tr>
+                </thead>
+                <tbody id="managerOverrideTable">
+                  <tr id="wireRow1">
+                    <td><span style="font-family: var(--font-mono); color: var(--glow-cyan);">TX-BATCH-094</span></td>
+                    <td> Zürich &rarr; New York </td>
+                    <td><strong style="color: var(--glow-emerald);">$12,500,000 Swiss Francs</strong></td>
+                    <td>
+                      <div style="display: flex; gap: 0.4rem;">
+                        <button class="btn-table-action" onclick="approveWireOverride('wireRow1', 'TX-BATCH-094', 12500000)">APPROVE HASH</button>
+                        <button class="btn-table-action danger" onclick="quarantineWireOverride('wireRow1', 'TX-BATCH-094')">QUARANTINE</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr id="wireRow2">
+                    <td><span style="font-family: var(--font-mono); color: var(--glow-cyan);">TX-BATCH-108</span></td>
+                    <td> Singapore &rarr; London </td>
+                    <td><strong style="color: var(--glow-emerald);">$8,400,000 SGD</strong></td>
+                    <td>
+                      <div style="display: flex; gap: 0.4rem;">
+                        <button class="btn-table-action" onclick="approveWireOverride('wireRow2', 'TX-BATCH-108', 8400000)">APPROVE HASH</button>
+                        <button class="btn-table-action danger" onclick="quarantineWireOverride('wireRow2', 'TX-BATCH-108')">QUARANTINE</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr id="wireRow3">
+                    <td><span style="font-family: var(--font-mono); color: var(--glow-cyan);">TX-BATCH-244</span></td>
+                    <td> Zürich &rarr; Singapore </td>
+                    <td><strong style="color: var(--glow-emerald);">$19,200,000 USD</strong></td>
+                    <td>
+                      <div style="display: flex; gap: 0.4rem;">
+                        <button class="btn-table-action" onclick="approveWireOverride('wireRow3', 'TX-BATCH-244', 19200000)">APPROVE HASH</button>
+                        <button class="btn-table-action danger" onclick="quarantineWireOverride('wireRow3', 'TX-BATCH-244')">QUARANTINE</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <!-- LIQUIDITY CONTROLLER -->
+          <article class="dash-card analytics-card">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">
+                <span class="indicator"></span>
+                Clearinghouse Liquidity Limit Adjusters
+              </h2>
+            </div>
+            <div class="cyber-slider-card">
+              <!-- Slider 1 -->
+              <div class="cyber-slider-group">
+                <div class="slider-info-row">
+                  <span class="slider-title">GLOBAL DAILY CLEARANCE CAP</span>
+                  <span class="slider-readout" id="readoutClearCap">$50,000,000</span>
+                </div>
+                <div class="cyber-slider-wrapper">
+                  <input type="range" class="cyber-slider" min="10" max="200" value="50" oninput="adjustSlider('ClearCap', this.value, '$', 'M')">
+                </div>
+              </div>
+              <!-- Slider 2 -->
+              <div class="cyber-slider-group">
+                <div class="slider-info-row">
+                  <span class="slider-title">VAULT MINIMUM LIQUIDITY RESERVE</span>
+                  <span class="slider-readout" id="readoutReserve">$15,000,000</span>
+                </div>
+                <div class="cyber-slider-wrapper">
+                  <input type="range" class="cyber-slider" min="5" max="100" value="15" oninput="adjustSlider('Reserve', this.value, '$', 'M')">
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="dashboard-control-panel">
+          <!-- READ-ONLY STAFF AUDIT VIEW -->
+          <article class="dash-card employee-card" style="min-height: 100%;">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">
+                <span class="indicator"></span>
+                Authorized Staff Nodes
+              </h2>
+            </div>
+            <div class="glass-table-wrapper">
+              <table class="glass-table">
+                <thead>
+                  <tr>
+                    <th>Identity</th>
+                    <th>Access Tier</th>
+                    <th>Auditor</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Jane Doe</strong></td>
+                    <td><span class="table-badge tier-manager">Customer</span></td>
+                    <td><button class="btn-table-action" onclick="auditEmployee('Jane Doe', 'Customer')">AUDIT TIER</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Sam Kovac</strong></td>
+                    <td><span class="table-badge tier-employee">Employee</span></td>
+                    <td><button class="btn-table-action" onclick="auditEmployee('Sam Kovac', 'Employee')">AUDIT TIER</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Alex Mercer</strong></td>
+                    <td><span class="table-badge tier-admin">Admin</span></td>
+                    <td><button class="btn-table-action" onclick="auditEmployee('Alex Mercer', 'Admin')">AUDIT TIER</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </div>
+
+      <!-- EMPLOYEE DESKTOP -->
+      <div id="desktopEmployee" class="role-desktop">
+        <section class="dashboard-main-content">
+          <!-- SUPPORT TICKETS -->
+          <article class="dash-card node-map-card" style="flex: 1.1;">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">
+                <span class="indicator active"></span>
+                Active Support Escalation Desk
+              </h2>
+              <span class="header-badge" style="color: var(--glow-emerald); border-color: var(--glow-emerald);">3 ACTIVE QUEUES</span>
+            </div>
+            <div class="support-queue-container" id="employeeSupportQueue">
+              <div class="support-ticket-item" id="ticket1">
+                <div class="ticket-meta">
+                  <span class="ticket-user">Jane Doe (Retail Vault #084)</span>
+                  <span class="ticket-desc">"Biometric mismatch lockout on central mobile terminal. Core re-key needed."</span>
+                  <span class="ticket-tag priority-high">High Priority</span>
+                </div>
+                <button class="btn-table-action" onclick="resolveTicket('ticket1', 'Jane Doe')">RESOLVE</button>
+              </div>
+              <div class="support-ticket-item" id="ticket2">
+                <div class="ticket-meta">
+                  <span class="ticket-user">Viktor Haas (System Overseer)</span>
+                  <span class="ticket-desc">"Manual token pager synch buffer drifting out of network matrix standard."</span>
+                  <span class="ticket-tag priority-high">High Priority</span>
+                </div>
+                <button class="btn-table-action" onclick="resolveTicket('ticket2', 'Viktor Haas')">RESOLVE</button>
+              </div>
+              <div class="support-ticket-item" id="ticket3">
+                <div class="ticket-meta">
+                  <span class="ticket-user">Marcus Lee (Zürich Vault)</span>
+                  <span class="ticket-desc">"Auditing logs synchronization requested on Swiss central mainframe."</span>
+                  <span class="ticket-tag priority-med">Medium Priority</span>
+                </div>
+                <button class="btn-table-action" onclick="resolveTicket('ticket3', 'Marcus Lee')">RESOLVE</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- MANUAL LEDGER TRANSACTION ENTRY -->
+          <article class="dash-card analytics-card" style="flex: 1;">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">
+                <span class="indicator"></span>
+                Manual Ledger Posting Desk
+              </h2>
+            </div>
+            <form class="cyber-form" onsubmit="submitManualPost(event)">
+              <div class="cyber-form-row">
+                <div class="form-group">
+                  <label class="form-label">SOURCE NETWORK NODE</label>
+                  <select id="manualSource" class="form-input">
+                    <option value="Zürich">Zürich Hub</option>
+                    <option value="New York">New York Hub</option>
+                    <option value="London">London Hub</option>
+                    <option value="Singapore">Singapore Hub</option>
+                    <option value="Tokyo">Tokyo Hub</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">DESTINATION NETWORK NODE</label>
+                  <select id="manualDest" class="form-input">
+                    <option value="Singapore">Singapore Hub</option>
+                    <option value="Zürich">Zürich Hub</option>
+                    <option value="New York">New York Hub</option>
+                    <option value="London">London Hub</option>
+                    <option value="Tokyo">Tokyo Hub</option>
+                  </select>
+                </div>
+              </div>
+              <div class="cyber-form-row">
+                <div class="form-group">
+                  <label class="form-label">TRANSFER AMOUNT ($)</label>
+                  <input type="number" id="manualAmount" class="form-input" placeholder="e.g. 5000000" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">CRYPTOGRAPHIC VALIDATOR KEY</label>
+                  <input type="text" id="manualSig" class="form-input" placeholder="0x_SECURE_HASH_...." value="0x5f241a8de8" readonly>
+                </div>
+              </div>
+              <button type="submit" class="bio-btn" style="margin-top: 0.5rem;">MANUALLY INJECT WIRE PROTOCOL</button>
+            </form>
+          </article>
+        </section>
+
+        <section class="dashboard-control-panel">
+          <!-- DAILY CHECKLIST -->
+          <article class="dash-card employee-card" style="min-height: 100%; padding-bottom: 2rem;">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">
+                <span class="indicator active"></span>
+                Operations Daily Flow Checklist
+              </h2>
+            </div>
+            <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.2rem;">
+              <label style="display: flex; gap: 0.8rem; font-size: 0.85rem; cursor: pointer; align-items: center;">
+                <input type="checkbox" style="accent-color: var(--glow-emerald); width: 16px; height: 16px;" checked>
+                <span>Synchronize central Swiss vault backup</span>
+              </label>
+              <label style="display: flex; gap: 0.8rem; font-size: 0.85rem; cursor: pointer; align-items: center;">
+                <input type="checkbox" style="accent-color: var(--glow-emerald); width: 16px; height: 16px;" checked>
+                <span>Verify firewall port telemetry status</span>
+              </label>
+              <label style="display: flex; gap: 0.8rem; font-size: 0.85rem; cursor: pointer; align-items: center;">
+                <input type="checkbox" style="accent-color: var(--glow-emerald); width: 16px; height: 16px;">
+                <span>Audit high-frequency liquidity pools</span>
+              </label>
+              <label style="display: flex; gap: 0.8rem; font-size: 0.85rem; cursor: pointer; align-items: center;">
+                <input type="checkbox" style="accent-color: var(--glow-emerald); width: 16px; height: 16px;">
+                <span>Flush Tokyo Node security logs cache</span>
+              </label>
+            </div>
+          </article>
+        </section>
+      </div>
+
+      <!-- CUSTOMER DESKTOP -->
+      <div id="desktopCustomer" class="role-desktop">
+        <section class="dashboard-main-content">
+          <!-- ACCUMULATED VAULT BALANCE -->
+          <div class="premium-balance-card">
+            <div class="balance-title-row">
+              <span class="balance-label">SECURE HIGH-NET-WORTH VAULT</span>
+              <span class="balance-card-type">RETAIL PLATINUM</span>
+            </div>
+            <div>
+              <div class="balance-big-amount" id="customerBalance">$1,248,500.00</div>
+              <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--glow-emerald);">+8.42% APY COMPOUNDING AUTO-LEDGER</div>
+            </div>
+            <div class="balance-footer">
+              <div>VAULT ID: <span class="vault-id">KIIS-VAL-09432-SEC</span></div>
+              <div>VAULT STATE: <strong style="color: var(--glow-emerald);">SECURE</strong></div>
+            </div>
+          </div>
+
+          <!-- ASSET ALLOCATION RING -->
+          <article class="dash-card analytics-card" style="flex: 1;">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">
+                <span class="indicator"></span>
+                Secure Portfolio Asset Allocation
+              </h2>
+            </div>
+            <div class="allocation-container">
+              <div class="allocation-circle-wrapper">
+                <svg width="140" height="140" class="allocation-circle-svg">
+                  <circle cx="70" cy="70" r="58" class="allocation-svg-bg"/>
+                  <!-- Dasharray formula: 2 * PI * r = 2 * 3.1416 * 58 = 364.4 -->
+                  <!-- 40% Liquidity (Emerald) = 145.7 dash offset -->
+                  <circle cx="70" cy="70" r="58" class="allocation-svg-fill"
+                    style="stroke: var(--glow-emerald); stroke-dasharray: 145.7 364.4;"/>
+                  <!-- 30% Crypto (Cyan) = 109.3 dash offset, shifted 145.7 -->
+                  <circle cx="70" cy="70" r="58" class="allocation-svg-fill"
+                    style="stroke: var(--glow-cyan); stroke-dasharray: 109.3 364.4; stroke-dashoffset: -145.7;"/>
+                  <!-- 30% Stocks (Amber/Gold) = 109.3 dash, shifted 255.0 -->
+                  <circle cx="70" cy="70" r="58" class="allocation-svg-fill"
+                    style="stroke: #ffb300; stroke-dasharray: 109.3 364.4; stroke-dashoffset: -255.0;"/>
+                </svg>
+                <div class="allocation-center-readout">
+                  <div class="allocation-readout-num">3</div>
+                  <div class="allocation-readout-lbl">Asset Classes</div>
+                </div>
+              </div>
+
+              <div class="allocation-legend-list">
+                <div class="legend-item">
+                  <div class="legend-label-col">
+                    <span class="legend-color-dot" style="background-color: var(--glow-emerald);"></span>
+                    <span>High-Yield Liquidity Vault</span>
+                  </div>
+                  <span class="legend-percent">40%</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-label-col">
+                    <span class="legend-color-dot" style="background-color: var(--glow-cyan);"></span>
+                    <span>Cryptocurrency Reserves</span>
+                  </div>
+                  <span class="legend-percent">30%</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-label-col">
+                    <span class="legend-color-dot" style="background-color: #ffb300;"></span>
+                    <span>Sovereign Real Estate Stocks</span>
+                  </div>
+                  <span class="legend-percent">30%</span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="dashboard-control-panel">
+          <!-- INSTANT CRYPTOGRAPHIC WIRE GATEWAY -->
+          <article class="dash-card employee-card" style="min-height: 100%;">
+            <div class="dash-card-header">
+              <h2 class="dash-card-title">
+                <span class="indicator active"></span>
+                Cryptographic Wire Transfer
+              </h2>
+            </div>
+            <form class="cyber-form" onsubmit="submitCustomerWire(event)">
+              <div class="form-group">
+                <label class="form-label">RECIPIENT ROUTING WALLET ADDRESS</label>
+                <input type="text" id="custWallet" class="form-input" placeholder="e.g. 0x71C...a49B" required>
+              </div>
+              <div class="form-group" style="margin-top: 0.5rem;">
+                <label class="form-label">ASSET SELECTION</label>
+                <select id="custAsset" class="form-input">
+                  <option value="Liquidity">High-Yield Liquidity (USD)</option>
+                  <option value="Crypto">Cryptocurrency (BTC/ETH)</option>
+                  <option value="Stocks">Real Estate Stocks (SRE)</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-top: 0.5rem;">
+                <label class="form-label">TRANSFER AMOUNT ($)</label>
+                <input type="number" id="custAmount" class="form-input" placeholder="e.g. 50000" min="1" required>
+              </div>
+
+              <!-- Interactive biometric click-to-sign fingerprint field -->
+              <div class="form-group" style="margin-top: 0.8rem; align-items: center;">
+                <label class="form-label" style="text-align: center;">BIOMETRIC CLICK-TO-SIGN</label>
+                <div class="fingerprint-touch-pad" id="custWireFingerprint" onclick="signCustomerWire()" style="width: 76px; height: 76px; margin: 0.5rem 0;">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="fingerprint-scan-svg">
+                    <path d="M12 2a10 10 0 0 0-8 8.1M20 10.1A10 10 0 0 0 12 2"/>
+                    <path d="M12 6a6 6 0 0 0-4.8 5M16.8 11A6 6 0 0 0 12 6"/>
+                    <path d="M12 10a2 2 0 0 0-1.6 2M13.6 12A2 2 0 0 0 12 10"/>
+                    <path d="M12 14v4M9 15v2M15 15v2M12 22v-2"/>
+                  </svg>
+                </div>
+                <span id="custFingerprintStatus" style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted);">STANDBY CLEARANCE</span>
+              </div>
+
+              <button type="submit" id="custWireSubmitBtn" class="bio-btn" style="margin-top: 0.5rem; opacity: 0.5; pointer-events: none;">EXECUTE CRYPTO WIRE</button>
+            </form>
+          </article>
+        </section>
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

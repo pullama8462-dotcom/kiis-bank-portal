@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KIIS Bank - Universal Biometric Gateway</title>
+  <meta name="description" content="Secure multi-portal login gateway for KIIS Bank. High-end obsidian glassmorphism, glowing 3D biometric portals.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Cyber Grid Wireframe Background -->
+  <div class="cyber-grid"></div>
+
+  <!-- Top Right Header Navigation Bar -->
+  <nav class="gateway-nav">
+    <button class="nav-login-btn" onclick="initiateScan('Customer')">SECURE LOGIN</button>
+  </nav>
+
+  <!-- Gateway Main Layout -->
+  <main class="gateway-container">
+    
+    <!-- 3D Emerald Glass Header -->
+    <header class="brand-container">
+      <h1 class="logo-kiis" id="kiisLogo">KIIS Bank</h1>
+      <p class="gateway-subtitle">Universal Biometric Gateway</p>
+    </header>
+
+    <!-- Four Hovering Biometric Portals -->
+    <section class="portals-grid" id="portalsGrid" style="display: flex; justify-content: center; max-width: 380px; margin: 0 auto;">
+      
+      <!-- CUSTOMER PORTAL -->
+      <article class="portal-card" data-role="Customer" id="portalCustomer" style="width: 100%;">
+        <div class="scan-line"></div>
+        <div class="portal-icon-wrapper">
+          <!-- Face ID / Biometric Mask SVG -->
+          <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--glow-cyan);">
+            <path d="M4 3h4V2H4a2 2 0 0 0-2 2v4h1V4a1 1 0 0 1 1-1zM20 3h-4v1h4a1 1 0 0 1 1 1v4h1V4a2 2 0 0 0-2-2zM4 21h4v-1H4a1 1 0 0 1-1-1v-4H2v4a2 2 0 0 0 2 2zM20 21h-4v-1h4a1 1 0 0 1 1-1v-4h1v4a2 2 0 0 0-2 2z"/>
+            <path d="M12 8v8M9 11v2M15 11v2"/>
+            <circle cx="12" cy="12" r="7" stroke-dasharray="3 3"/>
+          </svg>
+        </div>
+        <h2 class="portal-title">Customer Gateway</h2>
+        <p class="portal-desc">Personal vaults, premium investments, and high-frequency retail assets.</p>
+        <button class="bio-btn" onclick="initiateScan('Customer')">INITIALIZE SCAN</button>
+      </article>
+
+    </section>
+
+  </main>
+
+  <!-- Biometric Scanning HUD Overlay -->
+  <div class="bio-overlay" id="bioOverlay">
+    <div class="bio-scanner-panel">
+      <!-- Abort button on top right -->
+      <button class="auth-close-btn" onclick="abortScan()">&times;</button>
+      
+      <!-- STAGE 1: PASSWORD GATEWAY -->
+      <div class="auth-stage" id="stagePassword" style="display: none;">
+        <h2 class="auth-panel-title">MANDATE CLEARANCE</h2>
+        <p class="auth-panel-subtitle">Enter credentials for <span id="authRoleLabel" class="role-highlight">Admin</span> authorization.</p>
+        
+        <div class="cyber-input-wrapper" style="margin-bottom: 0.8rem;">
+          <input type="text" id="authUsername" placeholder="ENTER IDENTITY / USERNAME" class="cyber-input" autocomplete="off">
+          <div class="cyber-input-glow"></div>
+        </div>
+
+        <div class="cyber-input-wrapper" style="margin-top: 0px;">
+          <input type="password" id="authPassword" placeholder="ENTER PORTAL SECURITY KEY" class="cyber-input" autocomplete="off">
+          <div class="cyber-input-glow"></div>
+        </div>
+        
+        <div class="cyber-alert" id="passwordAlert"></div>
+        
+        <button class="bio-btn" onclick="submitPassword()">VALIDATE SECURE HASH</button>
+      </div>
+
+      <!-- STAGE 2: BIOMETRIC SCAN PAD -->
+      <div class="auth-stage" id="stageBiometric" style="display: none;">
+        <h2 class="auth-panel-title">BIOMETRIC VALIDATION</h2>
+        <p class="auth-panel-subtitle">Align and hold fingerprint on high-frequency sensor matrix.</p>
+        
+        <!-- Fingerprint Scanning Scope -->
+        <div class="scanner-hud">
+          <div class="scanner-hud-lines"></div>
+          <div class="scanner-laser-bar" id="scannerLaserBar"></div>
+          
+          <div class="fingerprint-touch-pad" id="fingerprintTouchPad" 
+               onmousedown="startFingerprintSweep(event)" 
+               onmouseup="endFingerprintSweep()" 
+               onmouseleave="endFingerprintSweep()"
+               ontouchstart="startFingerprintSweep(event)"
+               ontouchend="endFingerprintSweep()">
+            <svg width="74" height="74" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" class="fingerprint-scan-svg">
+              <path d="M12 2a10 10 0 0 0-8 8.1M20 10.1A10 10 0 0 0 12 2"/>
+              <path d="M12 6a6 6 0 0 0-4.8 5M16.8 11A6 6 0 0 0 12 6"/>
+              <path d="M12 10a2 2 0 0 0-1.6 2M13.6 12A2 2 0 0 0 12 10"/>
+              <path d="M12 14v4M9 15v2M15 15v2M12 22v-2"/>
+            </svg>
+          </div>
+        </div>
+        
+        <div class="scanner-status" id="scannerStatus">SENSOR PAD STANDBY</div>
+        <div class="scanner-subtext" id="scannerSubtext">Press and hold to run diagnostic sweep.</div>
+        
+        <!-- Progress Bar -->
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+      </div>
+
+      <!-- STAGE 3: 2FA CHALLENGE -->
+      <div class="auth-stage" id="stageTwofa" style="display: none;">
+        <h2 class="auth-panel-title">MOCK NEURAL PAGER</h2>
+        <p class="auth-panel-subtitle">A holographic authentication token has been dispatched to your pager.</p>
+        
+        <!-- Neural Pager Notification -->
+        <div class="pager-notification" id="pagerNotification">
+          <div class="pager-header">
+            <span class="pager-brand">📟 SECURE-COMM GATEWAY</span>
+            <span class="pager-timestamp">LIVE_FEED</span>
+          </div>
+          <div class="pager-message">
+            ALERT: Secure authentication token dispatched: <strong id="mockOtpToken" class="otp-highlight">888 999</strong>
+          </div>
+        </div>
+        
+        <div class="cyber-input-wrapper">
+          <input type="text" id="authTwofaCode" placeholder="ENTER 6-DIGIT CODE" class="cyber-input text-center" maxlength="6" autocomplete="off">
+          <div class="cyber-input-glow"></div>
+        </div>
+        
+        <div class="cyber-alert" id="twofaAlert"></div>
+        
+        <button class="bio-btn" onclick="submitTwofa()">AUTHORIZE TRANSIT PROTOCOLS</button>
+      </div>
+
+      <button class="abort-btn" onclick="abortScan()">ABORT TRANSIT</button>
+    </div>
+  </div>
+
+  <!-- STAFF PORTAL OVERLAY MODAL -->
+  <div class="staff-overlay" id="staffOverlay">
+    <div class="staff-panel">
+      <button class="auth-close-btn" onclick="closeStaffModal()">&times;</button>
+      <h2 class="auth-panel-title">STAFF PORTAL CORE</h2>
+      <p class="auth-panel-subtitle">Select staff operational tier to initialize biometrics.</p>
+      
+      <!-- Staff Tab Selectors -->
+      <div class="staff-tabs">
+        <button class="staff-tab active" id="tabEmployee" onclick="setStaffRole('Employee')">Employee Login</button>
+        <button class="staff-tab" id="tabAdmin" onclick="setStaffRole('Admin')">Admin Login</button>
+      </div>
+      
+      <div class="cyber-input-wrapper" style="margin-top: 1.5rem; margin-bottom: 0.8rem;">
+        <input type="text" id="staffUsername" placeholder="ENTER STAFF USERNAME" class="cyber-input" autocomplete="off">
+        <div class="cyber-input-glow"></div>
+      </div>
+
+      <div class="cyber-input-wrapper" style="margin-top: 0px;">
+        <input type="password" id="staffPassword" placeholder="ENTER SECURITY MAIN KEY" class="cyber-input" autocomplete="off">
+        <div class="cyber-input-glow"></div>
+      </div>
+      
+      <div class="cyber-alert" id="staffAlert" style="margin-bottom: 0.8rem;"></div>
+      
+      <button class="bio-btn" onclick="submitStaffPassword()">VALIDATE STAFF KEY</button>
+    </div>
+  </div>
+
+  <!-- Gateway Footer -->
+  <footer class="gateway-footer">
+    <span>&copy; 2026 KIIS Bank. Sovereign Mainframe Core.</span>
+    <button class="staff-link" onclick="openStaffModal()">Internal Access &rarr;</button>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cyan-glow: 0 0 15px rgba(0, 255, 255, 0.4), 0 0 30px rgba(0, 255, 255, 0.15);
+  --emerald-glow: 0 0 15px rgba(0, 230, 118, 0.4), 0 0 30px rgba(0, 230, 118, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: #00ffff rgba(5, 8, 12, 0.8);
+}
+
+/* Custom Cyber scrollbar style */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-track {
+  background: #05080c;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 255, 255, 0.2);
+  border-radius: 3px;
+  border: 1px solid rgba(0, 255, 255, 0.1);
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #00ffff;
+  box-shadow: var(--cyan-glow);
+}
+
+/* Cyber grid wireframe overlay */
+.cyber-background-grid {
+  background-image: 
+    linear-gradient(rgba(0, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: center;
+}
+
+/* Premium Obsidian Glassmorphism utility */
+.glass-panel {
+  background: rgba(11, 17, 24, 0.45);
+  border: 1px solid rgba(0, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+}
+
+.glass-panel-emerald {
+  background: rgba(11, 17, 24, 0.45);
+  border: 1px solid rgba(0, 230, 118, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* Portals Laser scan animation */
+.laser-scan-line {
+  background: linear-gradient(to right, transparent, #00ffff, transparent);
+  box-shadow: var(--cyan-glow);
+  animation: laserScanDown 3s linear infinite;
+}
+
+.laser-scan-line-green {
+  background: linear-gradient(to right, transparent, #00e676, transparent);
+  box-shadow: var(--emerald-glow);
+  animation: laserScanDown 2.2s linear infinite;
+}
+
+@keyframes laserScanDown {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+
+/* Pulsing text glow keyframes */
+.text-neon-cyan {
+  color: #00ffff;
+  text-shadow: var(--cyan-glow);
+}
+
+.text-neon-emerald {
+  color: #00e676;
+  text-shadow: var(--emerald-glow);
+}
+
+.pulse-glow-cyan {
+  animation: pulseGlowCyan 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlowCyan {
+  0% {
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+  }
+}
+
+.pulse-glow-emerald {
+  animation: pulseGlowEmerald 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlowEmerald {
+  0% {
+    box-shadow: 0 0 10px rgba(0, 230, 118, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 25px rgba(0, 230, 118, 0.6);
+  }
+}

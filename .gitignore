@@ -1,0 +1,16 @@
+node_modules/
+frontend/node_modules/
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+.env.local
+*.db
+backend/win_env/
+venv/
+.venv/
+cloudflared-tunnel.log
+frontend/dist/
+.vscode.zip
+frontend/.git.zip
+*.swp

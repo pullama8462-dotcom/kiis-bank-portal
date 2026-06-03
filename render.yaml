@@ -1,0 +1,23 @@
+# Permanent hosting on Render (runs 24/7 — laptop can be off)
+# After pushing to GitHub: https://dashboard.render.com/blueprints → New Blueprint Instance
+services:
+  - type: web
+    name: kiis-bank-portal
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kiis-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+
+databases:
+  - name: kiis-db
+    plan: free
+    databaseName: kiis_db
+    user: kiis
