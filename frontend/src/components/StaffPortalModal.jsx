@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { AuthContext } from '../context/AuthContext'
+import { loginRequest } from '../lib/api'
 
 export default function StaffPortalModal({ onClose }) {
+  const { login } = useContext(AuthContext)
   const [stage, setStage] = useState(1) // 1: Password, 2: Biometrics, 3: TwoFA, 4: Transition
   const [role, setRole] = useState('Employee') // Employee, Admin
   const [username, setUsername] = useState('')
@@ -21,8 +24,6 @@ export default function StaffPortalModal({ onClose }) {
   const [twofaAlert, setTwofaAlert] = useState('')
   const [tempUser, setTempUser] = useState(null)
 
-  const BACKEND_URL = window.location.origin
-
   const handleClose = () => {
     clearInterval(scanIntervalRef.current)
     onClose()
@@ -40,14 +41,9 @@ export default function StaffPortalModal({ onClose }) {
     setIsLoading(true)
 
     try {
-      const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      })
+      const { res, data } = await loginRequest(username, password)
 
       if (res.ok) {
-        const data = await res.json()
         
         if (data.role.toLowerCase() !== role.toLowerCase()) {
           setErrorMsg(`ACCESS DENIED - ROLE MISMATCH (AUTHORIZED AS ${data.role.toUpperCase()})`)
@@ -193,6 +189,8 @@ export default function StaffPortalModal({ onClose }) {
       } else {
         localStorage.removeItem('kiis_portal_token')
       }
+
+      login(tempUser.token || 'offline-token', tempUser.role, tempUser.username)
 
       setStage(4)
 

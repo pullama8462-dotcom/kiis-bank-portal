@@ -6,7 +6,12 @@
 // ==================== MAIN CORE STATE ENGINE & PERSISTENCE ====================
 const SESSION_KEY = 'kiis_portal_session';
 
-const BACKEND_URL = 'http://localhost:8000';
+const BACKEND_URL =
+  typeof window !== 'undefined' &&
+  window.location?.origin &&
+  window.location.origin !== 'null'
+    ? window.location.origin
+    : 'http://localhost:8000';
 
 function getAuthHeader() {
   const token = localStorage.getItem('kiis_portal_token');

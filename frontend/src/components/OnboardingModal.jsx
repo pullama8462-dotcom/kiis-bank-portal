@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import RuPayCard3D from './RuPayCard3D'
+import { getBackendUrl, loginRequest, apiFetch } from '../lib/api'
 
 export default function OnboardingModal({ onClose }) {
   const [step, setStep] = useState(1)
@@ -76,11 +77,11 @@ export default function OnboardingModal({ onClose }) {
     const chosenUsername = username.trim() || uName.replace(/\s+/g, '').toLowerCase();
     const chosenPassword = password || 'customer123';
     const initials = uName.split(' ').map(n => n[0]).join('').toUpperCase();
-    const BACKEND_URL = window.location.origin;
+    const backendUrl = getBackendUrl();
 
     try {
       const regEmail = `${chosenUsername}@example.com`;
-      await fetch(`${BACKEND_URL}/api/auth/register`, {
+      await fetch(`${backendUrl}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -92,26 +93,18 @@ export default function OnboardingModal({ onClose }) {
         })
       });
 
-      const loginRes = await fetch(`${BACKEND_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: chosenUsername,
-          password: chosenPassword
-        })
-      });
+      const { res: loginRes, data: loginData } = await loginRequest(
+        chosenUsername,
+        chosenPassword
+      );
 
-      if (loginRes.ok) {
-        const loginData = await loginRes.json();
+      if (loginRes.ok && loginData.access_token) {
         const token = loginData.access_token;
         localStorage.setItem('kiis_portal_token', token);
 
-        await fetch(`${BACKEND_URL}/api/customer/vkyc/upload`, {
+        await apiFetch('/api/customer/vkyc/upload', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
+          headers: { Authorization: `Bearer ${token}` },
           body: JSON.stringify({
             identity_proof_type: 'national_id',
             document_url: 'https://digilocker.gov.in/credentials/vector_hash'

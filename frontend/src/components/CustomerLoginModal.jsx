@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { AuthContext } from '../context/AuthContext'
+import { getBackendUrl, loginRequest } from '../lib/api'
 
 export default function CustomerLoginModal({ onClose, onOpenOnboarding }) {
   const { login } = useContext(AuthContext)
@@ -27,8 +28,6 @@ export default function CustomerLoginModal({ onClose, onOpenOnboarding }) {
   const [twofaAlert, setTwofaAlert] = useState('')
   const [tempUser, setTempUser] = useState(null)
 
-  const BACKEND_URL = window.location.origin
-
   const handleClose = () => {
     clearInterval(scanIntervalRef.current)
     onClose()
@@ -46,14 +45,9 @@ export default function CustomerLoginModal({ onClose, onOpenOnboarding }) {
     setIsLoading(true)
 
     try {
-      const res = await fetch(`${BACKEND_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      })
+      const { res, data } = await loginRequest(username, password)
 
       if (res.ok) {
-        const data = await res.json()
         
         if (data.role.toLowerCase() !== 'customer') {
           setErrorMsg(`ACCESS DENIED - ROLE MISMATCH (AUTHORIZED AS ${data.role.toUpperCase()})`)
@@ -345,7 +339,7 @@ export default function CustomerLoginModal({ onClose, onOpenOnboarding }) {
                               role: 'customer'
                             }
                             try {
-                              const r = await fetch(`${BACKEND_URL}/api/auth/register`, {
+                              const r = await fetch(`${getBackendUrl()}/api/auth/register`, {
                                 method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(regBody)
                               })
                               if (!r.ok) {
@@ -355,7 +349,7 @@ export default function CustomerLoginModal({ onClose, onOpenOnboarding }) {
                               }
 
                               // Now login
-                              const loginRes = await fetch(`${BACKEND_URL}/api/auth/login`, {
+                              const loginRes = await fetch(`${getBackendUrl()}/api/auth/login`, {
                                 method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ username: (regUsername && regUsername.trim()) ? regUsername.trim() : username.trim(), password: regPassword || password })
                               })
 

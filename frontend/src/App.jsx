@@ -200,7 +200,7 @@ export default function App() {
         </section>
 
         {/* SECURITY LAB (presentation — API gated server-side) */}
-        <SecurityLabSection className="pointer-events-none" />
+        <SecurityLabSection />
 
         {/* FOOTER */}
         <Footer onOpenStaffPortal={() => setIsStaffPortalOpen(true)} className="pointer-events-auto relative z-30" />

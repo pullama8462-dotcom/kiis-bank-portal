@@ -28,6 +28,13 @@ export function AuthProvider({ children }) {
   }, [])
 
   const login = (token, role, username) => {
+    if (token && token !== 'mock-customer-token' && token !== 'offline-token') {
+      localStorage.setItem('kiis_portal_token', token)
+    }
+    localStorage.setItem(
+      'kiis_portal_session',
+      JSON.stringify({ role, name: username })
+    )
     setAuthState({ token, role, username })
   }
 
