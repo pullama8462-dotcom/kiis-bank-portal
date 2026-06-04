@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, RedirectResponse
 import os
 from app.database import engine, Base
-from app.routers import auth, customer, employee, manager, admin
+from app.routers import auth, customer, employee, manager, admin, lab_security
 
 # Proactively bind declarative database tables
 Base.metadata.create_all(bind=engine)
@@ -40,6 +40,7 @@ app.include_router(customer.router)
 app.include_router(employee.router)
 app.include_router(manager.router)
 app.include_router(admin.router)
+app.include_router(lab_security.router)
 
 @app.get("/staff/login")
 @app.get("/staff")

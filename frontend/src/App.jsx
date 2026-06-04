@@ -10,6 +10,7 @@ import OnboardingModal from './components/OnboardingModal'
 import Footer from './components/Footer'
 import StaffPortalModal from './components/StaffPortalModal'
 import CustomerLoginModal from './components/CustomerLoginModal'
+import SecurityLabSection from './components/SecurityLabSection'
 
 // Register GSAP ScrollTrigger
 gsap.registerPlugin(ScrollTrigger)
@@ -73,7 +74,7 @@ export default function App() {
       </div>
 
       {/* SCROLLABLE CONTENT SECTIONS (SCROLL OVERLAY CONTAINER) */}
-      <div ref={scrollContainerRef} className="relative z-20 min-h-[400vh] pointer-events-none">
+      <div ref={scrollContainerRef} className="relative z-20 min-h-[500vh] pointer-events-none">
         
         {/* SECTION 1: ENTRANCE (0% - 25% Scroll) */}
         <section id="entrance" className="h-screen flex items-center justify-start px-12 md:px-24">
@@ -197,6 +198,9 @@ export default function App() {
             </button>
           </motion.div>
         </section>
+
+        {/* SECURITY LAB (presentation — API gated server-side) */}
+        <SecurityLabSection className="pointer-events-none" />
 
         {/* FOOTER */}
         <Footer onOpenStaffPortal={() => setIsStaffPortalOpen(true)} className="pointer-events-auto relative z-30" />

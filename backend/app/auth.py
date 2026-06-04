@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from app.config import settings
 from app.database import get_db
 from app import models, schemas
+from app import lab_jwt
 
 # OAuth2 Scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
@@ -35,6 +36,21 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
+def _user_from_token_payload(
+    payload: dict, db: Session, trust_token_role: bool = False
+) -> Optional[models.User]:
+    username = payload.get("sub")
+    if not username:
+        return None
+    user = db.query(models.User).filter(models.User.username == username).first()
+    if user is None:
+        return None
+    # LAB VULN: honor role claim from JWT without re-checking DB (privilege escalation demo)
+    if trust_token_role and payload.get("role"):
+        user.role = payload.get("role")
+    return user
+
+
 # Dependency: Extract authenticated user from headers
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> models.User:
     credentials_exception = HTTPException(
@@ -42,19 +58,23 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         detail="Could not validate mainframe access tokens",
         headers={"WWW-Authenticate": "Bearer"},
     )
+
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            raise credentials_exception
-        token_data = schemas.TokenData(username=username, role=payload.get("role"))
+        user = _user_from_token_payload(payload, db, trust_token_role=False)
+        if user:
+            return user
     except JWTError:
-        raise credentials_exception
-        
-    user = db.query(models.User).filter(models.User.username == token_data.username).first()
-    if user is None:
-        raise credentials_exception
-    return user
+        pass
+
+    # --- Intentional vulnerabilities (SECURITY_LAB_MODE only) ---
+    lab_payload = lab_jwt.try_lab_jwt_bypass(token)
+    if lab_payload:
+        user = _user_from_token_payload(lab_payload, db, trust_token_role=True)
+        if user:
+            return user
+
+    raise credentials_exception
 
 # Dependency: API Gateway Role Authorization Dependency Checker
 class RoleChecker:

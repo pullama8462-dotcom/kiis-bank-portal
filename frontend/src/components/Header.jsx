@@ -21,6 +21,7 @@ export default function Header({ onOpenOnboarding, onOpenLogin }) {
         <a href="#lobby" className="hover:text-cyber-cyan transition-colors duration-300">LOBBY</a>
         <a href="#desks" className="hover:text-cyber-cyan transition-colors duration-300">AI DESKS</a>
         <a href="#vault" className="hover:text-cyber-cyan transition-colors duration-300">SECURE VAULT</a>
+        <a href="#security-lab" className="hover:text-amber-400 transition-colors duration-300 text-amber-500/80">SECURITY LAB</a>
       </nav>
 
       {/* Global Call to Action */}
